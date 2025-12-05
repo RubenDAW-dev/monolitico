@@ -16,15 +16,16 @@ class User extends Authenticatable
         'password',
     ];
 
-    // One-to-Many: A user can create many petitions
+
     public function petitions()
     {
         return $this->hasMany(Petition::class);
     }
 
-    // Many-to-Many: A user can sign many petitions
+
     public function signatures()
     {
         return $this->belongsToMany(Petition::class, 'petition_user');
     }
+
 }
