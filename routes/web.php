@@ -52,25 +52,34 @@ Route::put('admin/peticiones/estado/{id}', 'cambiarEstado')->name('adminpeticion
     });
 
 // Categorías
-Route::prefix('admin/categorias')->group(function () {
-    Route::get('/', [AdminCategoriasController::class, 'index'])->name('admincategorias.index');
-    Route::get('/create', [AdminCategoriasController::class, 'create'])->name('admincategorias.create');
-    Route::post('/', [AdminCategoriasController::class, 'store'])->name('admincategorias.store');
-    Route::get('/{id}', [AdminCategoriasController::class, 'show'])->name('admincategorias.show');
-    Route::get('/{id}/edit', [AdminCategoriasController::class, 'edit'])->name('admincategorias.edit');
-    Route::put('/{id}', [AdminCategoriasController::class, 'update'])->name('admincategorias.update');
-    Route::delete('/{id}', [AdminCategoriasController::class, 'delete'])->name('admincategorias.delete');
-});
+Route::middleware(Admin::class)
+    ->prefix('admin/categorias')
+    ->controller(AdminCategoriasController::class)
+    ->group(function () {
+
+        Route::get('/', 'index')->name('admincategorias.index');
+        Route::get('/create', 'create')->name('admincategorias.create');
+        Route::post('/', 'store')->name('admincategorias.store');
+        Route::get('/{id}', 'show')->name('admincategorias.show');
+        Route::get('/{id}/edit', 'edit')->name('admincategorias.edit');
+        Route::put('/{id}', 'update')->name('admincategorias.update');
+        Route::delete('/{id}', 'delete')->name('admincategorias.delete');
+    });
 
 // Usuarios
-Route::prefix('admin/usuarios')->group(function () {
-    Route::get('/', [AdminUsersController::class, 'index'])->name('adminusuarios.index');
-    Route::get('/{id}', [AdminUsersController::class, 'show'])->name('adminusuarios.show');
-    Route::get('/{id}/edit', [AdminUsersController::class, 'edit'])->name('adminusuarios.edit');
-    Route::put('/{id}', [AdminUsersController::class, 'update'])->name('adminusuarios.update');
-    Route::delete('/{id}', [AdminUsersController::class, 'delete'])->name('adminusuarios.delete');
-    Route::get('admin/usuarios/create', [AdminUsersController::class, 'create'])->name('adminusuarios.create');
-    Route::post('admin/usuarios', [AdminUsersController::class, 'store'])->name('adminusuarios.store');
 
-});
+Route::middleware(Admin::class)
+    ->prefix('admin/usuarios')
+    ->controller(AdminUsersController::class)
+    ->group(function () {
+
+        Route::get('/', 'index')->name('adminusuarios.index');
+        Route::get('/create', 'create')->name('adminusuarios.create');
+        Route::post('/', 'store')->name('adminusuarios.store');
+        Route::get('/{id}', 'show')->name('adminusuarios.show');
+        Route::get('/{id}/edit', 'edit')->name('adminusuarios.edit');
+        Route::put('/{id}', 'update')->name('adminusuarios.update');
+        Route::delete('/{id}', 'delete')->name('adminusuarios.delete');
+    });
+
 require __DIR__.'/auth.php';
