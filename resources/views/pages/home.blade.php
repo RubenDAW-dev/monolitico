@@ -126,20 +126,30 @@
         </div>
       </div>
       <!-- Cards de causas -->
-      <div class="col-12">
-        <div class="row">
-          <div class="col-12 col-md-6 col-lg-3 mb-4">
-            <div class="card">
-              <img class="card-img-top" src="https://assets.change.org/photos/9/ca/rm/JACarMOCmNQsrUQ-800x450-noPad.jpg" alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Mi hija se suicidó con 15 años. El bullying NO es cosa de niñ@s...</h5>
-                <a href="#" class="btn" style="color: blue;">🖌️ 20.196 Firmas</a>
-              </div>
+        <div class="col-12">
+            <div class="row">
+                @foreach($petitions as $petition)
+                    <div class="col-12 col-md-6 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            @if($petition->files->count())
+                                <img class="card-img-top" src="{{ asset('storage/'.$petition->files->first()->file_path) }}" alt="{{ $petition->title }}">
+                            @else
+                                <img class="card-img-top" src="{{ asset('src/default.jpg') }}" alt="Sin imagen">
+                            @endif
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $petition->title }}</h5>
+                                <p class="card-text">{{ Str::limit($petition->description, 100) }}</p>
+                                <a href="{{ route('petitions.show', $petition->id) }}" class="btn btn-outline-primary">
+                                    🖌️ {{ $petition->signers }} Firmas
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-          </div>
-          <!-- Añade aquí las demás cards -->
         </div>
-      </div>
+
     </div>
   </div>
 </aside>

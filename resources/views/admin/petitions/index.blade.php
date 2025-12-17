@@ -4,6 +4,11 @@
 
 @section('content')
     <h2>Listado de Peticiones</h2>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ route('adminpeticiones.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nueva Petición
+        </a>
+    </div>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -25,11 +30,29 @@
                 <td>{{ $petition->status }}</td>
                 <td>
                     <a href="{{ route('adminpeticiones.show', $petition->id) }}" class="btn btn-info btn-sm">Ver</a>
-                    <a href="{{ route('adminpeticiones.edit', $petition->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                    <form action="{{ route('adminpeticiones.delete', $petition->id) }}" method="POST" style="display:inline;">
+                    <a href="{{ route('adminpeticiones.edit', $petition->id) }}"
+                       class="btn btn-warning btn-sm">Editar</a>
+                    <form action="{{ route('adminpeticiones.delete', $petition->id) }}"
+                          method="POST"
+                          style="display:inline;"
+                          onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta petición?');">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-danger btn-sm">Eliminar</button>
+                        @if(session('error'))
+                            <script>
+                                alert("{{ session('error') }}");
+                            </script>
+                        @endif
+                    </form>
+
+                    <form action="{{ route('adminpeticiones.estado', $petition->id) }}" method="POST"
+                          style="display:inline;">
+                        @csrf
+                        @method('PUT')
+                        <button class="btn btn-success btn-sm">
+                            Cambiar Estado
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -37,4 +60,4 @@
         </tbody>
     </table>
 @endsection
--
+

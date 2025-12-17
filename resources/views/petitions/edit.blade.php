@@ -1,35 +1,37 @@
 @extends('layouts.public')
 
-@section('title', 'Create Petition')
+@section('title', 'Editar Petición')
 
 @section('content')
     <div class="container">
-        <h2 class="h2CrearPetition mt-3">Demos el primer paso hacia el cambio</h2>
+        <h2 class="mt-3">Editar Petición</h2>
 
-        <form action="{{ route('petitions.store') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-white">
+        <form action="{{ route('petitions.update', $petition->id) }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-white">
             @csrf
+            @method('PUT')
 
             <div class="mb-4">
-                <label for="title" class="form-label fw-semibold">Título de la petición</label>
-                <input type="text" class="form-control" id="title" name="title" required>
+                <label for="title" class="form-label fw-semibold">Título</label>
+                <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $petition->title) }}" required>
             </div>
 
             <div class="mb-4">
                 <label for="description" class="form-label fw-semibold">Descripción</label>
-                <textarea class="form-control" id="description" name="description" rows="6" required></textarea>
+                <textarea class="form-control" id="description" name="description" rows="6" required>{{ old('description', $petition->description) }}</textarea>
             </div>
 
             <div class="mb-4">
                 <label for="recipient" class="form-label fw-semibold">Destinatario</label>
-                <input type="text" class="form-control" id="recipient" name="recipient" required>
+                <input type="text" class="form-control" id="recipient" name="recipient" value="{{ old('recipient', $petition->recipient) }}" required>
             </div>
-
 
             <div class="mb-4">
                 <label for="category_id" class="form-label fw-semibold">Categoría</label>
                 <select class="form-select" id="category_id" name="category_id" required>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option value="{{ $category->id }}" {{ $petition->category_id == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -40,9 +42,7 @@
             </div>
 
             <div class="text-end">
-                <button type="submit" class="btn btn-primary">
-                    Crear petición
-                </button>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>
         </form>
     </div>

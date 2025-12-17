@@ -22,6 +22,9 @@
                 <div class="collapse navbar-collapse custom-menu" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item d-none d-lg-block">
+                            <a class="nav-link" href="{{ route('petitions.all') }}">Peticiones</a>
+                        </li>
+                        <li class="nav-item d-none d-lg-block">
                             <a class="nav-link" href="{{ route('petitions.mine') }}">Mis peticiones</a>
                         </li>
                         <li class="nav-item">
@@ -40,11 +43,24 @@
                 </div>
             </div>
             <div class="d-flex align-items-center">
-                <a href="{{ route('petitions.create') }}" class="btn btn-outline-secondary peticion mr-2">
+                    <a href="{{ route('petitions.create') }}" class="btn btn-outline-secondary peticion me-2">
                     Inicia una petición
                 </a>
+                @guest
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">
+                        Iniciar sesión
+                    </a>
+                    <a href="{{ route('register') }}" class="btn btn-primary">
+                        Registrarse
+                    </a>
+                @endguest
                 @auth
-                    <a href="#" class="btn btn-link p-0 d-none d-lg-block ml-2">
+                    @if(Auth::user()->role === 1)
+                        <a href="{{ route('admin.home') }}" class="btn btn-danger me-2">
+                            Panel Admin
+                        </a>
+                    @endif
+                    <a href="{{ route('dashboard') }}" class="btn btn-link p-0 d-none d-lg-block ml-2">
                         <i class="fas fa-user-circle profile-icon"></i>
                     </a>
                 @endauth
