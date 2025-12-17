@@ -14,6 +14,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
 
@@ -26,6 +27,13 @@ class User extends Authenticatable
     public function signatures()
     {
         return $this->belongsToMany(Petition::class, 'petition_user');
+    }
+    public function peticionesFirmadas(Request $request)
+    {
+        $id = Auth::id();
+        $usuario = User::findOrFail($id);
+        $peticiones = $usuario->firmas;
+        return view('peticiones.index', compact('peticiones'));
     }
 
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Petition;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminPetitionsController extends Controller
 {
@@ -37,7 +38,11 @@ class AdminPetitionsController extends Controller
 
     public function store(Request $request)
     {
-        Petition::create($request->all());
+        $data = $request->all();
+        $data['user_id'] = Auth::id();
+
+        Petition::create($data);
+
         return redirect()->route('adminpeticiones.index');
     }
 
@@ -50,14 +55,21 @@ class AdminPetitionsController extends Controller
 
     public function delete($id)
     {
-        Petition::destroy($id);
-        return redirect()->route('adminpeticiones.index');
+        $petition = Petition::withCount('signatures')->findOrFail($id);
+
+        if ($petition->signatures_count > 0) {
+            return redirect()->back()->with('error', 'No se puede eliminar la petición porque tiene firmas.');
+        }
+
+        $petition->delete();
+        return redirect()->route('adminpeticiones.index')->with('success', 'Petición eliminada correctamente.');
     }
+
 
     public function cambiarEstado($id)
     {
         $petition = Petition::findOrFail($id);
-        $petition->status = $petition->status === 'pendiente' ? 'aceptada' : 'pendiente';
+        $petition->status = $petition->status === 'pending' ? 'accepted' : 'pending';
         $petition->save();
         return redirect()->route('adminpeticiones.index');
     }

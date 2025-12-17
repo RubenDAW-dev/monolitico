@@ -29,6 +29,7 @@ class PetitionController extends Controller
 
     public function create()
     {
+        // Pasamos las categorías a la vista
         $categories = Category::all();
         return view('petitions.create', compact('categories'));
     }
@@ -52,7 +53,7 @@ class PetitionController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = $file->getClientOriginalName();
-            $path = $file->storeAS('petitions', $filename, 'public');
+            $path = $file->storeAs('petitions', $filename, 'public');
 
             $petition->files()->create([
                 'name' => $file->getClientOriginalName(),
@@ -82,7 +83,8 @@ class PetitionController extends Controller
     public function edit($id)
     {
         $petition = Petition::findOrFail($id);
-        $categories = Category::all();
+        $this->authorize('edit', $petition);
+        $categories = Category::all(); // para el select de categorías
         return view('petitions.edit', compact('petition', 'categories'));
     }
     public function update(Request $request, $id)
@@ -96,6 +98,9 @@ class PetitionController extends Controller
         ]);
 
         $petition = Petition::findOrFail($id);
+
+        $this->authorize('update', $petition);
+
         $petition->update($request->only(['title','description','recipient','category_id']));
 
         if ($request->hasFile('image')) {
@@ -112,5 +117,9 @@ class PetitionController extends Controller
         return redirect()->route('petitions.mine')->with('success', 'Petición actualizada correctamente');
     }
 
+    public function all(){
+        $petitions = Petition::all();
+        return view('petitions.index', compact('petitions'));
+    }
 
 }
